@@ -1,8 +1,7 @@
-import { NgFor } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Hero } from '../../models/hero';
-import { HEROES } from '../../sample-data/mock-heroes';
-
+import { HeroService } from '../services/hero.service';
+import { MessageService } from '../services/message.service';
 @Component({
   // standalone: true,
   selector: 'app-heroes',
@@ -10,12 +9,18 @@ import { HEROES } from '../../sample-data/mock-heroes';
   styleUrl: './heroes.component.css',
   // imports: [NgFor],
 })
-export class HeroesComponent {
-  heroes: Hero[] = HEROES;
+export class HeroesComponent implements OnInit {
+  heroes: Hero[] = [];
+  constructor(
+    private heroService: HeroService,
+    private messageService: MessageService
+  ) {}
 
-  selectedHero?: Hero;
-  onSelect(hero: Hero): void {
-    console.log(hero);
-    this.selectedHero = hero;
+  ngOnInit(): void {
+    this.getHeroes();
+  }
+
+  getHeroes(): void {
+    this.heroService.getHeroes().subscribe((heroes) => (this.heroes = heroes));
   }
 }
